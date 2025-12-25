@@ -1,32 +1,30 @@
 <template>
-  <div class="home w-80 h-60">
+  <div class="home">
     <h1>Bienvenue sur la borne de commande</h1>
-    <nav>
-      <router-link 
-        to="/food" 
-        style="border-radius: 100px; color: black; background-color: white; padding: 8px 20px; margin-left: 10rem; font-size : 1.5rem"
-      >
-        <strong>Je commande</strong>
+
+    <div class="actions">
+      <router-link to="/food" class="btn primary">
+        Je commande
       </router-link>
 
-      <button 
-        @click="afficherPopup = true"
-        style="border-radius: 100px; color: black; background-color: white; padding: 8px 20px; margin-left: 10rem; font-size : 1.5rem; border: none; cursor: pointer;"
-      >
-        <strong>Abandonner</strong>
+      <button class="btn secondary" @click="afficherPopup = true">
+        Abandonner
       </button>
-    </nav>
+    </div>
 
-    <p>Utilisez la navigation ci-dessus 👆🏾 pour commencer votre commande.</p>
+    <p class="hint">
+      Touchez un bouton pour commencer votre commande
+    </p>
 
-    <!-- Popup de confirmation -->
+    <!-- Popup -->
     <div v-if="afficherPopup" class="overlay">
       <div class="popup">
         <h2>Abandonner la commande ?</h2>
         <p>Êtes-vous sûr de vouloir quitter et annuler votre commande ?</p>
+
         <div class="popup-buttons">
-          <button class="btn-oui" @click="quitterCommande">Oui</button>
-          <button class="btn-non" @click="afficherPopup = false">Non</button>
+          <button class="btn danger" @click="quitterCommande">Oui</button>
+          <button class="btn success" @click="afficherPopup = false">Non</button>
         </div>
       </div>
     </div>
@@ -50,38 +48,85 @@ export default {
   methods: {
     quitterCommande() {
       this.cartStore.clearCart()
-      this.afficherPopup = false;
-      this.$router.push('/');
+      this.afficherPopup = false
+      this.$router.push('/')
     }
   }
 }
 </script>
 
 <style scoped>
+/* === Layout général === */
 .home {
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  min-height: 100vh;
   background-color: rgb(237, 97, 27);
-  height: 57.5rem;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem;
+  text-align: center;
+  box-sizing: border-box;
 }
 
-nav a {
-  margin: 0 10px;
+h1 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+/* === Boutons === */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 350px;
+}
+
+.btn {
+  display: block;
+  padding: 1.2rem;
+  font-size: 1.3rem;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
   text-decoration: none;
-}
-nav a.router-link-exact-active {
   font-weight: bold;
-  text-decoration: underline;
 }
 
-/* Style du fond flou lors de la popup */
+/* Variantes */
+.primary {
+  background: white;
+  color: black;
+}
+
+.secondary {
+  background: #f5f5f5;
+  color: black;
+}
+
+.danger {
+  background: red;
+  color: white;
+}
+
+.success {
+  background: green;
+  color: white;
+}
+
+/* === Texte aide === */
+.hint {
+  margin-top: 2rem;
+  font-size: 1.1rem;
+  color: white;
+}
+
+/* === Popup === */
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: rgba(0,0,0,0.6);
   display: flex;
   justify-content: center;
@@ -89,58 +134,22 @@ nav a.router-link-exact-active {
   z-index: 1000;
 }
 
-/* Style de la popup */
 .popup {
   background: white;
   padding: 2rem;
   border-radius: 20px;
-  text-align: center;
-  max-width: 400px;
   width: 90%;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  max-width: 400px;
 }
 
-.popup h2 {
-  font-size: 1.8rem;
-  margin-bottom: 1rem;
-}
-
-.popup p {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-}
-
-/* Boutons larges pour écran tactile */
 .popup-buttons {
   display: flex;
-  justify-content: space-around;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
-.btn-oui {
-  background: red;
-  color: white;
-  font-size: 1.2rem;
-  padding: 1rem 2rem;
-  border: none;
-  border-radius: 15px;
-  cursor: pointer;
-}
-
-.btn-non {
-  background: green;
-  color: white;
-  font-size: 1.2rem;
-  padding: 1rem 2rem;
-  border: none;
-  border-radius: 15px;
-  cursor: pointer;
-}
-
-.btn-oui:hover {
-  background: darkred;
-}
-
-.btn-non:hover {
-  background: darkgreen;
+.popup-buttons .btn {
+  flex: 1;
+  font-size: 1.1rem;
 }
 </style>
