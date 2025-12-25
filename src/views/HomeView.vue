@@ -13,7 +13,7 @@
     </div>
 
     <p class="hint">
-      Touchez un bouton pour commencer votre commande
+      Cliquez sur le bouton Je commande pour commencer votre commande
     </p>
 
     <!-- Popup -->

@@ -1,101 +1,56 @@
 <template>
-  <div class="p-6" style ="background-image: url('/images/fond.jpg')">
-    <div v-if="selectedCategory?.label!=='Jus'">
-      <h1 class="text-3xl font-bold mb-8 text-center"> 🍽️ Choisissez votre {{ selectedCategory?.label.toLowerCase() || 'catégorie' }} </h1>
-    </div>
-    <div v-else>
-      <h1 class="text-3xl font-bold mb-8 text-center">🥤 Choisissez votre Jus </h1>
-    </div>
+  <div class="food-page">
+    <!-- TITRE -->
+    <h1 class="title">
+      {{ selectedCategory?.label === 'Jus' ? '🥤 Choisissez votre Jus' : `🍽️ Choisissez votre ${selectedCategory?.label?.toLowerCase() || 'catégorie'}` }}
+    </h1>
 
-    <!-- conteneur des colonnes ; on fixe la hauteur pour permettre les scroll indépendants -->
-    <div
-      ref="columnsContainer"
-      class="flex gap-6 mx-auto max-w-7xl"
-      :style="{ height: 'calc(100vh - 8rem)' }"
-    >
-      <!-- COLONNE GAUCHE : CATÉGORIES -->
-      <aside
-        ref="leftCol"
-        class="w-64 pr-4 border-r border-gray-300 overflow-y-auto"
-      >
-        <div class="flex flex-col gap-6 py-2">
+    <!-- CONTENEUR PRINCIPAL -->
+    <div ref="columnsContainer" class="layout">
+
+      <!-- COLONNE CATEGORIES -->
+      <aside ref="leftCol" class="categories-col">
+        <div class="categories-list">
           <div
             v-for="category in categories"
             :key="category.name"
             @click="selectCategory(category)"
-            class="cursor-pointer transform hover:scale-105 transition-all duration-200"
+            :class="['category-item', { 'selected': selectedCategory?.name === category.name }]"
           >
-              <img
-                :src="category.image"
-                :alt="category.label"
-                class="rounded-xl shadow-lg w-52 h-36 object-cover mx-auto border-3"
-                :class="{
-              'border-green-600': selectedCategory?.name === category.name,
-              'border-transparent': selectedCategory?.name !== category.name
-            }"
-            style = "width : 25rem; margin-left : 15px; margin-right : 25px; border-radius : 2em"
-              />
-            <p
-              class="mt-2 text-center font-semibold text-lg text-gray-800 bg-white rounded-xl py-1"
-            >
-              {{ category.label }}
-            </p>
+            <img :src="category.image" :alt="category.label"/>
+            <p>{{ category.label }}</p>
           </div>
         </div>
       </aside>
 
-
-      <!-- COLONNE DROITE : PRODUITS -->
-      <main
-        ref="rightCol"
-        class="flex-1 pl-6 overflow-y-auto"
-      >
-        <transition-group
-          name="fade-slide"
-          tag="div"
-          class="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-2"
-          style = ""
-        >
-          <article
-            v-for="item in selectedCategory?.items || []"
-            :key="item.name"
-            class="bg-white rounded-2xl shadow-md p-4 hover:scale-[1.03] transition transform duration-300"
-          >
-          
-          <div style ="margin-left : 1.5em">
-            <img 
-            @click="addToCart(item)"
-            :src="item.image" class="cursor-pointer rounded-xl h-36 w-full object-cover mb-3" style ="border-radius : 2.5rem; background : rgb(159, 159, 173)"/>
-            <div v-if="selectedCategory?.label!=='Jus'">
-              <p class="text-xl font-bold mb-1"><strong>{{ item.name }} : {{ item.price.toFixed(2) }} €</strong> ({{item.composant}})</p>
-            </div>
-            <div v-else>
-              <h4 class="text-xl font-bold mb-1">{{ item.name }} : {{ item.price.toFixed(2) }} €</h4>
-            </div>
+      <!-- COLONNE PRODUITS -->
+      <main ref="rightCol" class="products-col">
+        <div v-if="selectedCategory">
+          <div class="grid">
+            <article v-for="item in selectedCategory.items" :key="item.name" class="product-card">
+              <img @click="addToCart(item)" :src="item.image" :alt="item.name"/>
+              <p class="product-name">
+                {{ item.name }} : {{ item.price.toFixed(2) }} €
+                <span v-if="item.composant">({{ item.composant }})</span>
+              </p>
+            </article>
           </div>
-          </article>
-        </transition-group>
+        </div>
 
-        <div v-if="!selectedCategory" class="text-gray-500 text-center py-8">
+        <div v-else class="no-selection">
           🧭 Cliquez sur une catégorie à gauche pour commander
         </div>
-
-        <!-- PANIER -->
-        <div class="mt-8">
-          <CartSummary />
-        </div>
       </main>
-      
+
+      <!-- PANIER FIXE À DROITE -->
+      <aside class="cart-right">
+        <CartSummary />
+      </aside>
     </div>
 
-    <!-- Navigation -->
-    <div class="mt-10 flex justify-between" style ="margin-left : 76rem; border-radius : 100px; padding : 1.5px; height : 2rem; width : 5rem;  background-color : rgb(226, 120, 58)">
-      <router-link
-        to="/home"
-        class="px-3 py-3" style="margin-left : 8.5px; color : white; font-size : 1.5em"
-      >
-        Retour
-      </router-link>
+    <!-- NAVIGATION RETOUR -->
+    <div class="nav-back">
+      <router-link to="/home">Retour</router-link>
     </div>
   </div>
 </template>
@@ -163,29 +118,21 @@ function selectCategory(category) {
 }
 
 function onWheel(e) {
-  // n'intervenir que pour scroll vertical
   if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return
-
   const x = e.clientX
   const y = e.clientY
   const el = document.elementFromPoint(x, y)
   if (!el) return
-
-  // si le pointeur est sur la colonne gauche (leftCol)
   if (leftCol.value && leftCol.value.contains(el)) {
     leftCol.value.scrollTop += e.deltaY
     e.preventDefault()
-  }
-  // si le pointeur est sur la colonne droite (rightCol)
-  else if (rightCol.value && rightCol.value.contains(el)) {
+  } else if (rightCol.value && rightCol.value.contains(el)) {
     rightCol.value.scrollTop += e.deltaY
     e.preventDefault()
   }
-  // sinon : laisser le comportement par défaut (body scroll)
 }
 
 onMounted(() => {
-  // attache l'écouteur non passive pour pouvoir preventDefault()
   if (columnsContainer.value) {
     columnsContainer.value.addEventListener('wheel', onWheel, { passive: false })
   }
@@ -196,24 +143,165 @@ onBeforeUnmount(() => {
     columnsContainer.value.removeEventListener('wheel', onWheel)
   }
 })
-
 </script>
 
 <style scoped>
-.fade-slide-enter-active,
-.fade-slide-leave-active {
-  transition: all 0.3s ease;
-}
-.fade-slide-enter-from {
-  opacity: 0;
-  transform: translateY(10px);
-}
-.fade-slide-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
+.food-page {
+  padding: 1rem;
+  background-image: url('/public/images/fond.jpg');
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-h1 {
-  font-family: 'Segoe UI', sans-serif;
+.title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.layout {
+  display: flex;
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: calc(100vh - 6rem);
+  position: relative;
+}
+
+/* COLONNE CATEGORIES */
+.categories-col {
+  width: 260px;
+  overflow-y: auto;
+  border-right: 1px solid #ccc;
+}
+
+.categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.category-item {
+  cursor: pointer;
+  text-align: center;
+  border-radius: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.category-item.selected {
+  border: 3px solid #22c55e;
+  transform: scale(1.05);
+}
+
+.category-item img {
+  width: 100%;
+  border-radius: 1.5rem;
+  object-fit: cover;
+}
+
+.category-item p {
+  margin-top: 0.5rem;
+  font-weight: bold;
+  background: white;
+  border-radius: 0.5rem;
+}
+
+/* COLONNE PRODUITS */
+.products-col {
+  flex: 1;
+  padding: 0 1rem;
+  overflow-y: auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.product-card {
+  background: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.product-card img {
+  width: 100%;
+  border-radius: 1rem;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.product-name {
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+
+/* PANIER FIXE À DROITE */
+.cart-right {
+  position: sticky;
+  top: 1rem;
+  width: 280px;
+  flex-shrink: 0;
+  height: fit-content;
+}
+
+/* NAVIGATION RETOUR */
+.nav-back {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.nav-back a {
+  background-color: rgb(226, 120, 58);
+  color: white;
+  border-radius: 100px;
+  padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.nav-back a:hover {
+  background-color: rgb(200, 100, 20);
+}
+
+/* === MOBILE === */
+@media (max-width: 1024px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .categories-col {
+    width: 100%;
+    border-right: none;
+    display: flex;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+  }
+
+  .category-item {
+    min-width: 140px;
+    margin-right: 0.5rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cart-right {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+    padding: 0.5rem;
+    z-index: 1000;
+  }
 }
 </style>
