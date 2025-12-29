@@ -1,20 +1,18 @@
 <template>
   <div class="home">
-    <h1>Bienvenue sur la borne de commande</h1>
+    <h1>Bienvenue chez Sene'Eat</h1>
 
     <div class="actions">
-      <router-link to="/food" class="btn primary">
-        Je commande
-      </router-link>
+      <button class="btn primary" @click="allerCommander">
+  Je commande
+</button>
+
 
       <button class="btn secondary" @click="afficherPopup = true">
         Abandonner
       </button>
     </div>
 
-    <p class="hint">
-      Cliquez sur le bouton Je commande pour commencer votre commande
-    </p>
 
     <!-- Popup -->
     <div v-if="afficherPopup" class="overlay">
@@ -46,6 +44,9 @@ export default {
     return { cartStore }
   },
   methods: {
+    allerCommander() {
+    this.$router.push('/food')
+  },
     quitterCommande() {
       this.cartStore.clearCart()
       this.afficherPopup = false
@@ -117,11 +118,6 @@ h1 {
 }
 
 /* === Texte aide === */
-.hint {
-  margin-top: 2rem;
-  font-size: 1.1rem;
-  color: white;
-}
 
 /* === Popup === */
 .overlay {
@@ -136,7 +132,7 @@ h1 {
 
 .popup {
   background: white;
-  padding: 2rem;
+  padding: 5rem;
   border-radius: 20px;
   width: 90%;
   max-width: 400px;

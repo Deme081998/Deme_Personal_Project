@@ -29,7 +29,7 @@
         :disabled="items.length === 0"
         @click="goToConfirmation"
         class="confirm-btn">
-        Passer la commande
+        Payer la commande
       </button>
     </div>
   </div>

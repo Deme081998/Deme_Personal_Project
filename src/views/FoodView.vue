@@ -2,22 +2,25 @@
   <div class="food-page">
     <!-- TITRE -->
     <h1 class="title">
-      {{ selectedCategory?.label === 'Jus' ? '🥤 Choisissez votre Jus' : `🍽️ Choisissez votre ${selectedCategory?.label?.toLowerCase() || 'catégorie'}` }}
+      {{ selectedCategory?.label === 'Jus'
+        ? '🥤 Choisissez votre Jus'
+        : `🍽️ Choisissez votre ${selectedCategory?.label?.toLowerCase() || 'catégorie'}`
+      }}
     </h1>
 
     <!-- CONTENEUR PRINCIPAL -->
     <div ref="columnsContainer" class="layout">
 
-      <!-- COLONNE CATEGORIES -->
+      <!-- COLONNE CATÉGORIES -->
       <aside ref="leftCol" class="categories-col">
         <div class="categories-list">
           <div
             v-for="category in categories"
             :key="category.name"
             @click="selectCategory(category)"
-            :class="['category-item', { 'selected': selectedCategory?.name === category.name }]"
+            :class="['category-item', { selected: selectedCategory?.name === category.name }]"
           >
-            <img :src="category.image" :alt="category.label"/>
+            <img :src="category.image" :alt="category.label" />
             <p>{{ category.label }}</p>
           </div>
         </div>
@@ -27,8 +30,16 @@
       <main ref="rightCol" class="products-col">
         <div v-if="selectedCategory">
           <div class="grid">
-            <article v-for="item in selectedCategory.items" :key="item.name" class="product-card">
-              <img @click="addToCart(item)" :src="item.image" :alt="item.name"/>
+            <article
+              v-for="item in selectedCategory.items"
+              :key="item.name"
+              class="product-card"
+            >
+              <img
+                @click="addToCart(item)"
+                :src="item.image"
+                :alt="item.name"
+              />
               <p class="product-name">
                 {{ item.name }} : {{ item.price.toFixed(2) }} €
                 <span v-if="item.composant">({{ item.composant }})</span>
@@ -38,34 +49,52 @@
         </div>
 
         <div v-else class="no-selection">
-          🧭 Cliquez sur une catégorie à gauche pour commander
+          🧭 Cliquez sur une catégorie pour composer votre menu
         </div>
       </main>
 
-      <!-- PANIER FIXE À DROITE -->
-      <aside class="cart-right">
-        <CartSummary />
-      </aside>
+      <!-- PANIER À DROITE -->
+<aside ref="cartCol" class="cart-right">
+  <!-- BOUTON RETOUR -->
+  <router-link to="/home" class="back-btn">
+    ⬅ Retour
+  </router-link>
+
+  <!-- PANIER -->
+  <CartSummary />
+    <!-- BOUTON POUR PASSER LA COMMANDE -->
+    <button class="pay-btn" :disabled="cart.items.length === 0" @click="goToConfirmation">
+    ✅ Passer la commande
+  </button>
+</aside>
+
     </div>
 
-    <!-- NAVIGATION RETOUR -->
-    <div class="nav-back">
-      <router-link to="/home">Retour</router-link>
-    </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useCartStore } from '@/stores/cart'
+import { useRouter } from 'vue-router'
+
 import CartSummary from '@/components/CartSummary.vue'
 
 const cart = useCartStore()
+const router = useRouter()
+
 
 function addToCart(item) {
   cart.addItem({ ...item, category: 'food' })
 }
 
+function goToConfirmation() {
+  if (cart.items.length > 0) {
+    router.push('/cart')
+  }
+}
+
+/* ================== DONNÉES ================== */
 const categories = [
   {
     name: 'plats',
@@ -73,10 +102,10 @@ const categories = [
     image: '/images/categorie_plat.jpg',
     items: [
       { name: 'Thiébou dieune', composant: 'riz, poisson, légumes', price: 16, image: '/images/tieboudiene.jpg' },
-      { name: 'Thiébou guinaar', composant: 'riz, poulet, légumineuses', price: 16, image: '/images/poulet.jpg' },
+      { name: 'Thiébou guinaar', composant: 'riz, poulet', price: 16, image: '/images/poulet.jpg' },
       { name: 'Domoda yapp', composant: 'riz, viande', price: 16, image: '/images/domoda_yapp.jpg' },
       { name: 'Yassa guinaar', composant: 'riz, poulet', price: 16, image: '/images/yassa.jpg' },
-      { name: 'Salade composée', composant: 'salade, viande, tomate', price: 13, image: '/images/salade.jpg' },
+      { name: 'Salade composée', composant: 'salade, viande', price: 13, image: '/images/salade.jpg' },
       { name: 'Couscous guinaar', composant: 'couscous, poulet', price: 16, image: '/images/couscous-de-poulet-au-raisins.jpg' }
     ]
   },
@@ -85,9 +114,9 @@ const categories = [
     label: 'Dessert',
     image: '/images/categorie_dessert.jpg',
     items: [
-      { name: 'Lakh sow', composant: 'lait caillé, bouillie de mil', price: 10, image: '/images/laakh.jpg' },
-      { name: 'Lakh neuteri', composant: 'ngalakh, bouillie de mil', price: 10, image: '/images/neuteri.jpg' },
-      { name: 'Thiakry', composant: 'lait caillé, bouillie de mil, raisin', price: 10, image: '/images/thiakry.jpg' }
+      { name: 'Lakh sow', composant: 'lait caillé', price: 10, image: '/images/laakh.jpg' },
+      { name: 'Lakh neuteri', composant: 'ngalakh', price: 10, image: '/images/neuteri.jpg' },
+      { name: 'Thiakry', composant: 'mil, lait', price: 10, image: '/images/thiakry.jpg' }
     ]
   },
   {
@@ -103,53 +132,100 @@ const categories = [
       { name: 'Orange', price: 6, image: '/images/jus_orange.jpg' },
       { name: 'Citron', price: 6, image: '/images/jus_de_citron.jpg' },
       { name: 'Pomme', price: 6, image: '/images/jus_de_pomme.jpg' },
-      { name: 'Ananas', price: 6, image: '/images/jus_ananas.jpg' },
+      { name: 'Ananas', price: 6, image: '/images/jus_ananas.jpg' }
     ]
   }
 ]
 
+/* ================== ÉTAT ================== */
 const selectedCategory = ref(null)
 const leftCol = ref(null)
 const rightCol = ref(null)
+const cartCol = ref(null)
 const columnsContainer = ref(null)
 
 function selectCategory(category) {
   selectedCategory.value = category
 }
 
+/* ================== SCROLL INTELLIGENT ================== */
 function onWheel(e) {
   if (Math.abs(e.deltaY) < Math.abs(e.deltaX)) return
-  const x = e.clientX
-  const y = e.clientY
-  const el = document.elementFromPoint(x, y)
+
+  const el = document.elementFromPoint(e.clientX, e.clientY)
   if (!el) return
-  if (leftCol.value && leftCol.value.contains(el)) {
-    leftCol.value.scrollTop += e.deltaY
-    e.preventDefault()
-  } else if (rightCol.value && rightCol.value.contains(el)) {
-    rightCol.value.scrollTop += e.deltaY
-    e.preventDefault()
+
+  const scrollables = [leftCol.value, rightCol.value, cartCol.value]
+
+  for (const col of scrollables) {
+    if (col && col.contains(el)) {
+      col.scrollTop += e.deltaY
+      e.preventDefault()
+      return
+    }
   }
 }
 
 onMounted(() => {
-  if (columnsContainer.value) {
-    columnsContainer.value.addEventListener('wheel', onWheel, { passive: false })
-  }
+  columnsContainer.value?.addEventListener('wheel', onWheel, { passive: false })
 })
 
 onBeforeUnmount(() => {
-  if (columnsContainer.value) {
-    columnsContainer.value.removeEventListener('wheel', onWheel)
-  }
+  columnsContainer.value?.removeEventListener('wheel', onWheel)
 })
 </script>
 
 <style scoped>
+/* ===== BOUTON RETOUR ===== */
+.back-btn {
+  display: block;
+  text-align: center;
+  margin-bottom: 0.75rem;
+  padding: 0.6rem 1rem;
+  background: rgb(226, 120, 58);
+  color: white;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.back-btn:hover {
+  background: rgb(200, 100, 45);
+  transform: scale(1.03);
+}
+
+.pay-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: 0.75rem;
+  padding: 0.7rem 1rem;
+  background: rgb(4, 127, 24);
+  color: white;
+  border-radius: 999px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease, opacity 0.2s;
+}
+
+.pay-btn:hover:not(:disabled) {
+  background: rgb(0, 180, 60);
+  transform: scale(1.03);
+}
+
+.pay-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none;
+}
+
 .food-page {
   padding: 1rem;
-  background-image: url('/public/images/fond.jpg');
   min-height: 100vh;
+  background-image: url('/public/images/fond.jpg');
   font-family: 'Segoe UI', sans-serif;
 }
 
@@ -159,16 +235,17 @@ onBeforeUnmount(() => {
   margin-bottom: 1rem;
 }
 
+/* ===== LAYOUT ===== */
 .layout {
   display: flex;
   gap: 1.5rem;
   max-width: 1400px;
   margin: 0 auto;
-  min-height: calc(100vh - 6rem);
-  position: relative;
+  height: calc(100vh - 6rem);
+  overflow: hidden;
 }
 
-/* COLONNE CATEGORIES */
+/* ===== CATÉGORIES ===== */
 .categories-col {
   width: 260px;
   overflow-y: auto;
@@ -179,39 +256,30 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  padding: 1rem 0;
 }
 
 .category-item {
   cursor: pointer;
   text-align: center;
-  border-radius: 1.5rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s;
 }
 
 .category-item.selected {
   border: 3px solid #22c55e;
+  border-radius: 1.5rem;
   transform: scale(1.05);
 }
 
 .category-item img {
   width: 100%;
   border-radius: 1.5rem;
-  object-fit: cover;
 }
 
-.category-item p {
-  margin-top: 0.5rem;
-  font-weight: bold;
-  background: white;
-  border-radius: 0.5rem;
-}
-
-/* COLONNE PRODUITS */
+/* ===== PRODUITS ===== */
 .products-col {
   flex: 1;
-  padding: 0 1rem;
   overflow-y: auto;
+  padding: 0 1rem;
 }
 
 .grid {
@@ -223,7 +291,6 @@ onBeforeUnmount(() => {
 .product-card {
   background: white;
   border-radius: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   padding: 0.5rem;
   text-align: center;
 }
@@ -231,66 +298,54 @@ onBeforeUnmount(() => {
 .product-card img {
   width: 100%;
   border-radius: 1rem;
-  object-fit: cover;
   cursor: pointer;
 }
 
-.product-name {
-  margin-top: 0.5rem;
-  font-weight: bold;
-}
-
-/* PANIER FIXE À DROITE */
+/* ===== PANIER ===== */
 .cart-right {
+  width: 350px;
+  max-height: calc(100vh - 8rem);
+  overflow-y: auto;
   position: sticky;
   top: 1rem;
-  width: 280px;
-  flex-shrink: 0;
-  height: fit-content;
 }
 
-/* NAVIGATION RETOUR */
+/* ===== NAV ===== */
 .nav-back {
-  margin-top: 1.5rem;
   display: flex;
   justify-content: flex-end;
+  margin-top: 1rem;
 }
 
 .nav-back a {
-  background-color: rgb(226, 120, 58);
+  background: rgb(226, 120, 58);
   color: white;
+  padding: 0.6rem 1.2rem;
   border-radius: 100px;
-  padding: 0.5rem 1rem;
-  font-size: 1.2rem;
   text-decoration: none;
-  transition: background 0.2s;
 }
 
-.nav-back a:hover {
-  background-color: rgb(200, 100, 20);
-}
-
-/* === MOBILE === */
+/* ===== MOBILE / TABLETTE ===== */
 @media (max-width: 1024px) {
   .layout {
     flex-direction: column;
+    height: auto;
+    overflow: visible;
   }
 
   .categories-col {
     width: 100%;
-    border-right: none;
     display: flex;
     overflow-x: auto;
-    padding: 0.5rem 0;
+    border-right: none;
   }
 
-  .category-item {
-    min-width: 140px;
-    margin-right: 0.5rem;
+  .categories-list {
+    flex-direction: row;
   }
 
   .grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
   }
 
   .cart-right {
@@ -298,10 +353,18 @@ onBeforeUnmount(() => {
     bottom: 0;
     left: 0;
     width: 100%;
+    max-height: 40vh;
     background: white;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
-    padding: 0.5rem;
     z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+  }
+  .cart-right {
+    padding-top: 0.75rem;
+  }
+
+  .back-btn {
+    margin: 0 auto 0.5rem auto;
+    width: 90%;
   }
 }
 </style>
