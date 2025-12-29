@@ -54,22 +54,30 @@
       </main>
 
       <!-- PANIER À DROITE -->
-<aside ref="cartCol" class="cart-right">
-  <!-- BOUTON RETOUR -->
-  <router-link to="/home" class="back-btn">
-    ⬅ Retour
-  </router-link>
+      <aside ref="cartCol" class="cart-right">
+        <!-- BOUTON RETOUR -->
+        <router-link to="/home" class="back-btn">
+          ⬅ Retour
+        </router-link>
 
-  <!-- PANIER -->
-  <CartSummary />
-    <!-- BOUTON POUR PASSER LA COMMANDE -->
-    <button class="pay-btn" :disabled="cart.items.length === 0" @click="goToConfirmation">
-    ✅ Passer la commande
-  </button>
-</aside>
-
+        <!-- PANIER -->
+        <CartSummary />
+        <!-- BOUTON POUR PASSER LA COMMANDE -->
+        <button class="pay-btn" :disabled="cart.items.length === 0" @click="goToConfirmation">
+        ✅ Passer la commande
+        </button>
+      </aside>
     </div>
-
+    <!-- BARRE PANIER FLOTTANTE (MOBILE) -->
+    <div class="cart-floating" v-if="cart.items.length > 0">
+      <div class="cart-floating-content" @click="goToConfirmation">
+        <span class="cart-count">🛒 {{ cart.items.length }}</span>
+        <span class="cart-total">
+        {{ cart.totalPrice.toFixed(2) }} €
+        </span>
+        <span class="cart-action">Voir le panier ➜</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -176,205 +184,259 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-/* ===== BOUTON RETOUR ===== */
-.back-btn {
-  display: block;
-  text-align: center;
-  margin-bottom: 0.75rem;
-  padding: 0.6rem 1rem;
-  background: rgb(226, 120, 58);
-  color: white;
-  border-radius: 999px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background 0.2s ease, transform 0.1s ease;
-}
+  /* ===== BOUTON RETOUR ===== */
+  .back-btn {
+    display: block;
+    text-align: center;
+    margin-bottom: 0.75rem;
+    padding: 0.6rem 1rem;
+    background: rgb(226, 120, 58);
+    color: white;
+    border-radius: 999px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.2s ease, transform 0.1s ease;
+  }
 
-.back-btn:hover {
-  background: rgb(200, 100, 45);
-  transform: scale(1.03);
-}
+  .back-btn:hover {
+    background: rgb(200, 100, 45);
+    transform: scale(1.03);
+  }
 
-.pay-btn {
-  display: block;
-  width: 100%;
-  text-align: center;
-  margin-top: 0.75rem;
-  padding: 0.7rem 1rem;
-  background: rgb(4, 127, 24);
-  color: white;
-  border-radius: 999px;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease, opacity 0.2s;
-}
+  .pay-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 0.75rem;
+    padding: 0.7rem 1rem;
+    background: rgb(4, 127, 24);
+    color: white;
+    border-radius: 999px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease, opacity 0.2s;
+  }
 
-.pay-btn:hover:not(:disabled) {
-  background: rgb(0, 180, 60);
-  transform: scale(1.03);
-}
+  .pay-btn:hover:not(:disabled) {
+    background: rgb(0, 180, 60);
+    transform: scale(1.03);
+  }
 
-.pay-btn:disabled {
-  background: #9ca3af;
-  cursor: not-allowed;
-  opacity: 0.6;
-  transform: none;
-}
+  .pay-btn:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none;
+  }
 
-.food-page {
-  padding: 1rem;
-  min-height: 100vh;
-  background-image: url('/public/images/fond.jpg');
-  font-family: 'Segoe UI', sans-serif;
-}
+  .food-page {
+    padding: 1rem;
+    min-height: 100vh;
+    background-image: url('/public/images/fond.jpg');
+    font-family: 'Segoe UI', sans-serif;
+  }
 
-.title {
-  text-align: center;
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
+  .title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
 
-/* ===== LAYOUT ===== */
-.layout {
-  display: flex;
-  gap: 1.5rem;
-  max-width: 1400px;
-  margin: 0 auto;
-  height: calc(100vh - 6rem);
-  overflow: hidden;
-}
-
-/* ===== CATÉGORIES ===== */
-.categories-col {
-  width: 260px;
-  overflow-y: auto;
-  border-right: 1px solid #ccc;
-}
-
-.categories-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.category-item {
-  cursor: pointer;
-  text-align: center;
-  transition: transform 0.2s;
-}
-
-.category-item.selected {
-  border: 3px solid #22c55e;
-  border-radius: 1.5rem;
-  transform: scale(1.05);
-}
-
-.category-item img {
-  width: 100%;
-  border-radius: 1.5rem;
-}
-
-/* ===== PRODUITS ===== */
-.products-col {
-  flex: 1;
-  overflow-y: auto;
-  padding: 0 1rem;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-}
-
-.product-card {
-  background: white;
-  border-radius: 1.5rem;
-  padding: 0.5rem;
-  text-align: center;
-}
-
-.product-card img {
-  width: 100%;
-  border-radius: 1rem;
-  cursor: pointer;
-}
-
-/* ===== PANIER ===== */
-.cart-right {
-  width: 350px;
-  max-height: calc(100vh - 8rem);
-  overflow-y: auto;
-  position: sticky;
-  top: 1rem;
-}
-
-/* ===== NAV ===== */
-.nav-back {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1rem;
-}
-
-.nav-back a {
-  background: rgb(226, 120, 58);
-  color: white;
-  padding: 0.6rem 1.2rem;
-  border-radius: 100px;
-  text-decoration: none;
-}
-
-/* ===== MOBILE / TABLETTE ===== */
-@media (max-width: 1024px) {
+  /* ===== LAYOUT ===== */
   .layout {
-    flex-direction: row; /* IMPORTANT */
-    height: calc(100vh - 5rem);
+    display: flex;
+    gap: 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    height: calc(100vh - 6rem);
     overflow: hidden;
   }
 
-  /* CATÉGORIES À GAUCHE */
+  /* ===== CATÉGORIES ===== */
   .categories-col {
-    width: 120px;
+    width: 260px;
     overflow-y: auto;
-    border-right: 1px solid #ddd;
+    border-right: 1px solid #ccc;
   }
 
   .categories-list {
+    display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
   }
 
-  .category-item p {
-    font-size: 0.75rem;
+  .category-item {
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.2s;
   }
 
-  /* PRODUITS AU CENTRE */
+  .category-item.selected {
+    border: 3px solid #22c55e;
+    border-radius: 1.5rem;
+    transform: scale(1.05);
+  }
+
+  .category-item img {
+    width: 100%;
+    border-radius: 1.5rem;
+  }
+
+  /* ===== PRODUITS ===== */
   .products-col {
     flex: 1;
     overflow-y: auto;
-    padding: 0 0.5rem;
+    padding: 0 1rem;
   }
 
   .grid {
-    grid-template-columns: repeat(2, 1fr);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
   }
 
-  /* PANIER À DROITE */
-  .cart-right {
-    width: 220px;
-    position: sticky;
-    top: 0.5rem;
-    max-height: calc(100vh - 6rem);
-    overflow-y: auto;
+  .product-card {
     background: white;
-    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    border-radius: 1.5rem;
+    padding: 0.5rem;
+    text-align: center;
   }
 
-  .back-btn,
-  .pay-btn {
+  .product-card img {
+    width: 100%;
+    border-radius: 1rem;
+    cursor: pointer;
+  }
+
+  /* ===== PANIER ===== */
+  .cart-right {
+    width: 350px;
+    max-height: calc(100vh - 8rem);
+    overflow-y: auto;
+    position: sticky;
+    top: 1rem;
+  }
+
+  /* ===== NAV ===== */
+  .nav-back {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+  }
+
+  .nav-back a {
+    background: rgb(226, 120, 58);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 100px;
+    text-decoration: none;
+  }
+
+  /* ===== MOBILE / TABLETTE ===== */
+  @media (max-width: 1024px) {
+    .layout {
+      flex-direction: row; /* IMPORTANT */
+      height: calc(100vh - 5rem);
+      overflow: hidden;
+    }
+
+    /* CATÉGORIES À GAUCHE */
+    .categories-col {
+      width: 120px;
+      overflow-y: auto;
+      border-right: 1px solid #ddd;
+    }
+
+    .categories-list {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .category-item p {
+      font-size: 0.75rem;
+    }
+
+    /* PRODUITS AU CENTRE */
+    .products-col {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 0.5rem;
+    }
+
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* PANIER À DROITE */
+    .cart-right {
+      width: 220px;
+      position: sticky;
+      top: 0.5rem;
+      max-height: calc(100vh - 6rem);
+      overflow-y: auto;
+      background: white;
+      box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    }
+
+    .back-btn,
+    .pay-btn {
+      font-size: 0.85rem;
+      padding: 0.5rem;
+    }
+  }
+  /* ===== BARRE PANIER FLOTTANTE (MOBILE) ===== */
+.cart-floating {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .cart-floating {
+    display: block;
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92%;
+    z-index: 2000;
+  }
+
+  .cart-floating-content {
+    background: rgb(4, 127, 24);
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+
+  .cart-floating-content:active {
+    transform: scale(0.96);
+  }
+
+  .cart-count {
+    background: rgba(255,255,255,0.2);
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+  }
+
+  .cart-total {
+    font-size: 1rem;
+  }
+
+  .cart-action {
     font-size: 0.85rem;
-    padding: 0.5rem;
+    opacity: 0.9;
+  }
+
+  /* Cache le panier latéral sur mobile */
+  .cart-right {
+    display: none;
   }
 }
 

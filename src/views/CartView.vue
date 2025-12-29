@@ -29,7 +29,7 @@
         :disabled="items.length === 0"
         @click="goToConfirmation"
         class="confirm-btn">
-        Payer la commande
+        Payer
       </button>
     </div>
   </div>
@@ -147,8 +147,8 @@ function goToConfirmation() {
   color: white;
   border: none;
   border-radius: 40px;
-  padding: 10px 20px;
-  font-size: 1rem;
+  padding: 25px 45px;
+  font-size: 1.4rem;
   cursor: pointer;
   transition: background 0.2s;
 }
