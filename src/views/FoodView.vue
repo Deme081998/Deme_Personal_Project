@@ -328,43 +328,54 @@ onBeforeUnmount(() => {
 /* ===== MOBILE / TABLETTE ===== */
 @media (max-width: 1024px) {
   .layout {
-    flex-direction: column;
-    height: auto;
-    overflow: visible;
+    flex-direction: row; /* IMPORTANT */
+    height: calc(100vh - 5rem);
+    overflow: hidden;
   }
 
+  /* CATÉGORIES À GAUCHE */
   .categories-col {
-    width: 100%;
-    display: flex;
-    overflow-x: auto;
-    border-right: none;
+    width: 120px;
+    overflow-y: auto;
+    border-right: 1px solid #ddd;
   }
 
   .categories-list {
-    flex-direction: row;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .category-item p {
+    font-size: 0.75rem;
+  }
+
+  /* PRODUITS AU CENTRE */
+  .products-col {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 0.5rem;
   }
 
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 
+  /* PANIER À DROITE */
   .cart-right {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    max-height: 40vh;
+    width: 220px;
+    position: sticky;
+    top: 0.5rem;
+    max-height: calc(100vh - 6rem);
+    overflow-y: auto;
     background: white;
-    z-index: 1000;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
-  }
-  .cart-right {
-    padding-top: 0.75rem;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
   }
 
-  .back-btn {
-    margin: 0 auto 0.5rem auto;
-    width: 90%;
+  .back-btn,
+  .pay-btn {
+    font-size: 0.85rem;
+    padding: 0.5rem;
   }
 }
+
 </style>
