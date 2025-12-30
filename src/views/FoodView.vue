@@ -76,7 +76,7 @@
           class="cart-floating"
           v-if="cart.items.length > 0">
           <button class="cart-floating-content" @click="toggleMobileCart">
-            <span>🛒 {{ cart.items.length }} article(s)</span>
+            <span>🛒 {{ cart.items.length }} article <span v-if="cart.items.length>1">s</span></span>
             <span>{{ cart.totalPrice.toFixed(2) }} €</span>
             <span>{{ showMobileCart ? '▼' : '▲' }}</span>
           </button>
@@ -87,7 +87,7 @@
         class="mobile-cart-sheet"
         v-if="showMobileCart">
         <div class="sheet-header">
-          <h3>🛒 Votre panier</h3>
+          //<h3>🛒 Votre panier</h3>
           <button @click="toggleMobileCart">✕</button>
         </div>
 
