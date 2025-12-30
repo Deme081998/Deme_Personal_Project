@@ -15,15 +15,8 @@
     <div v-if="cart.items.length > 0" class="mt-4">
       <hr class="my-2" />
       <div class="flex justify-between font-bold">
-        <span style = "background-color : orange"><strong>Total</strong> = {{ total.toFixed(2) }} €</span>
+        <span style = "background-color : rgb(20, 179, 65); margin-left: 1.5rem"><strong>Total</strong> = {{ total.toFixed(2) }} €</span>
       </div>
-      <router-link
-        to="/cart"
-        class="block mt-4 bg-blue-600 text-white text-center py-2 rounded-lg hover:bg-blue-700 transition"
-        style = "margin-left : 22rem; width : 6.5em; border-radius : 2em; font-size : 1.8em; color : black; background-color : green;"
-      >
-        Voir le panier
-      </router-link>
     </div>
   </div>
 </template>

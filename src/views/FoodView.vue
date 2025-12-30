@@ -54,28 +54,51 @@
       </main>
 
       <!-- PANIER À DROITE -->
+      <!-- PANIER À DROITE (DESKTOP) -->
       <aside ref="cartCol" class="cart-right">
-        <!-- BOUTON RETOUR -->
-        <router-link to="/home" class="back-btn">
+        <button class="back-btn" @click="goToHome">
           ⬅ Retour
-        </router-link>
+        </button>
 
-        <!-- PANIER -->
         <CartSummary />
-        <!-- BOUTON POUR PASSER LA COMMANDE -->
-        <button class="pay-btn" :disabled="cart.items.length === 0" @click="goToConfirmation">
-        ✅ Passer la commande
+
+        <button
+          class="pay-btn"
+          :disabled="cart.items.length === 0"
+          @click="goToConfirmation"
+        >
+          ✅ Passer la commande
         </button>
       </aside>
-    </div>
-    <!-- BARRE PANIER FLOTTANTE (MOBILE) -->
-    <div class="cart-floating" v-if="cart.items.length > 0">
-      <div class="cart-floating-content" @click="goToConfirmation">
-        <span class="cart-count">🛒 {{ cart.items.length }}</span>
-        <span class="cart-total">
-        {{ cart.totalPrice.toFixed(2) }} €
-        </span>
-        <span class="cart-action">Voir le panier ➜</span>
+
+      <!-- ===== BOUTON PANIER MOBILE ===== -->
+        <div
+          class="cart-floating"
+          v-if="cart.items.length > 0">
+          <button class="cart-floating-content" @click="toggleMobileCart">
+            <span>🛒 {{ cart.items.length }} article(s)</span>
+            <span>{{ cart.totalPrice.toFixed(2) }} €</span>
+            <span>{{ showMobileCart ? '▼' : '▲' }}</span>
+          </button>
+        </div>
+
+      <!-- ===== PANIER DÉROULANT MOBILE ===== -->
+      <div
+        class="mobile-cart-sheet"
+        v-if="showMobileCart">
+        <div class="sheet-header">
+          <h3>🛒 Votre panier</h3>
+          <button @click="toggleMobileCart">✕</button>
+        </div>
+
+        <CartSummary />
+
+        <button
+          class="pay-btn mobile-pay"
+          :disabled="cart.items.length === 0"
+          @click="goToConfirmation">
+          ✅ Passer la commande
+        </button>
       </div>
     </div>
   </div>
@@ -85,11 +108,11 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useCartStore } from '@/stores/cart'
 import { useRouter } from 'vue-router'
-
 import CartSummary from '@/components/CartSummary.vue'
 
 const cart = useCartStore()
 const router = useRouter()
+const showMobileCart = ref(false)
 
 
 function addToCart(item) {
@@ -101,6 +124,15 @@ function goToConfirmation() {
     router.push('/cart')
   }
 }
+
+function goToHome() {
+  router.push('/home')
+}
+
+function toggleMobileCart() {
+  showMobileCart.value = !showMobileCart.value
+}
+
 
 /* ================== DONNÉES ================== */
 const categories = [
@@ -193,8 +225,10 @@ onBeforeUnmount(() => {
     background: rgb(226, 120, 58);
     color: white;
     border-radius: 999px;
+    font-size : 20px;
     text-decoration: none;
     font-weight: 600;
+    border: solid Orange;
     transition: background 0.2s ease, transform 0.1s ease;
   }
 
@@ -205,15 +239,16 @@ onBeforeUnmount(() => {
 
   .pay-btn {
     display: block;
-    width: 100%;
+    width: 90%;
     text-align: center;
     margin-top: 0.75rem;
-    padding: 0.7rem 1rem;
+    margin-bottom: 5rem;
+    margin-left: 1.5em;
+    padding: 0.9rem 1rem;
     background: rgb(4, 127, 24);
     color: white;
     border-radius: 999px;
     font-weight: 700;
-    border: none;
     cursor: pointer;
     transition: background 0.2s ease, transform 0.1s ease, opacity 0.2s;
   }
@@ -226,7 +261,7 @@ onBeforeUnmount(() => {
   .pay-btn:disabled {
     background: #9ca3af;
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: 10.6;
     transform: none;
   }
 
@@ -264,6 +299,7 @@ onBeforeUnmount(() => {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    margin-bottom: 5rem;
   }
 
   .category-item {
@@ -288,6 +324,7 @@ onBeforeUnmount(() => {
     flex: 1;
     overflow-y: auto;
     padding: 0 1rem;
+    margin-bottom: 5rem;
   }
 
   .grid {
@@ -427,11 +464,6 @@ onBeforeUnmount(() => {
 
   .cart-total {
     font-size: 1rem;
-  }
-
-  .cart-action {
-    font-size: 0.85rem;
-    opacity: 0.9;
   }
 
   /* Cache le panier latéral sur mobile */
