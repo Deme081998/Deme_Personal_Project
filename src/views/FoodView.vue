@@ -83,16 +83,18 @@
         </div>
 
       <!-- ===== PANIER DÉROULANT MOBILE ===== -->
-      <div
-        class="mobile-cart-sheet"
-        v-if="showMobileCart">
+      <div class="mobile-cart-sheet" v-if="showMobileCart">
         <div class="sheet-header">
           //<h3>🛒 Votre panier</h3>
           <button @click="toggleMobileCart">✕</button>
         </div>
 
-        <CartSummary />
+        <!-- ZONE SCROLLABLE -->
+        <div class="sheet-content">
+          <CartSummary />
+        </div>
 
+        <!-- ACTION FIXE EN BAS -->
         <button
           class="pay-btn mobile-pay"
           :disabled="cart.items.length === 0"
@@ -100,6 +102,7 @@
           ✅ Passer la commande
         </button>
       </div>
+
     </div>
   </div>
 </template>
@@ -470,6 +473,46 @@ onBeforeUnmount(() => {
   .cart-right {
     display: none;
   }
+  /* ===== PANIER DÉROULANT MOBILE (SCROLLABLE) ===== */
+  .mobile-cart-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70vh; /* IMPORTANT */
+    background: white;
+    border-top-left-radius: 1.5rem;
+    border-top-right-radius: 1.5rem;
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 -6px 20px rgba(0,0,0,0.25);
+  }
+
+  /* Header fixe */
+  .sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    font-weight: bold;
+  }
+
+  /* 🔥 ZONE QUI SCROLL 🔥 */
+  .sheet-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Bouton fixé en bas */
+  .mobile-pay {
+    margin: 0.75rem auto 1rem;
+    width: 90%;
+  }
+
 }
 
 </style>

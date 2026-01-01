@@ -59,7 +59,7 @@ export default {
 <style scoped>
 /* === Layout général === */
 .home {
-  min-height: 100vh;
+  min-height: 98.4vh;
   background-color: rgb(237, 97, 27);
   display: flex;
   flex-direction: column;
