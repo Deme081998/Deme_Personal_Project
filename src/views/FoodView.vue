@@ -242,7 +242,7 @@ onBeforeUnmount(() => {
 
   .pay-btn {
     display: block;
-    width: 90%;
+    width: 60%;
     text-align: center;
     margin-top: 0.75rem;
     margin-bottom: 5rem;
