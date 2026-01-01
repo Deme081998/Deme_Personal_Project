@@ -145,7 +145,9 @@ const categories = [
     image: '/images/categorie_plat.jpg',
     items: [
       { name: 'Thiébou dieune', composant: 'riz, poisson, légumes', price: 16, image: '/images/tieboudiene.jpg' },
-      { name: 'Thiébou guinaar', composant: 'riz, poulet', price: 16, image: '/images/poulet.jpg' },
+      { name: 'Thiébou diaga', composant: 'riz, poisson, légumes, boulette', price: 16, image: '/images/thiébou_diaga.jpg' },
+      { name: 'Thiébou guinaar', composant: 'riz, poulet, œufs, légumes', price: 16, image: '/images/poulet.jpg' },
+      { name: 'Thiébou yapp', composant: 'riz, viande, œufs, légumes', price: 16, image: '/images/thiébou_yapp.jpg' },
       { name: 'Domoda yapp', composant: 'riz, viande', price: 16, image: '/images/domoda_yapp.jpg' },
       { name: 'Yassa guinaar', composant: 'riz, poulet', price: 16, image: '/images/yassa.jpg' },
       { name: 'Salade composée', composant: 'salade, viande', price: 13, image: '/images/salade.jpg' },
@@ -175,7 +177,12 @@ const categories = [
       { name: 'Orange', price: 6, image: '/images/jus_orange.jpg' },
       { name: 'Citron', price: 6, image: '/images/jus_de_citron.jpg' },
       { name: 'Pomme', price: 6, image: '/images/jus_de_pomme.jpg' },
-      { name: 'Ananas', price: 6, image: '/images/jus_ananas.jpg' }
+      { name: 'Ananas', price: 6, image: '/images/jus_ananas.jpg' },
+      { name: 'Goyave', price: 6, image: '/images/jus_goyave.jpg'},
+      { name: 'Gingembre', price: 6, image: '/images/ginger.jpg'},
+      { name: 'Pastèque', price: 6, image: '/images/jus_pasteque.jpg'},
+      { name: 'Melon', price: 6, image: '/images/jus_melon.jpg'},
+      { name: 'Poire', price: 6, image: '/images/jus_poire.jpg'}
     ]
   }
 ]
