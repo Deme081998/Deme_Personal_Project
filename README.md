@@ -1,4 +1,4 @@
-# mon_projet_perso
+# Commande de plats sénégalais
 
 ## Project setup
 ```
