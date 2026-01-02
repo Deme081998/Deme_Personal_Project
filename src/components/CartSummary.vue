@@ -1,6 +1,5 @@
 <template>
   <div class="bg-gray-100 p-4 rounded-xl shadow-md w-full lg:w-72" style="margin-left : 0.5em">
-    <h2 class="text-xl font-semibold mb-4">🛒 Votre panier</h2>
     <ul v-if="cart.items.length > 0" class="space-y-2">
       <li v-for="(item, index) in cart.items" :key="index" class="flex justify-between">
         <span ><img

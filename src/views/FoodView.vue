@@ -76,7 +76,7 @@
           class="cart-floating"
           v-if="cart.items.length > 0">
           <button class="cart-floating-content" @click="toggleMobileCart">
-            <span>🛒 {{ cart.items.length }} article <span v-if="cart.items.length>1">s</span></span>
+            <span>🛒 {{ cart.items.length }} article<span v-if="cart.items.length>1">s</span></span>
             <span>{{ cart.totalPrice.toFixed(2) }} €</span>
             <span>{{ showMobileCart ? '▼' : '▲' }}</span>
           </button>
@@ -85,7 +85,7 @@
       <!-- ===== PANIER DÉROULANT MOBILE ===== -->
       <div class="mobile-cart-sheet" v-if="showMobileCart">
         <div class="sheet-header">
-          //<h3>🛒 Votre panier</h3>
+          <h3>🛒 Votre panier</h3>
           <button @click="toggleMobileCart">✕</button>
         </div>
 
@@ -151,7 +151,8 @@ const categories = [
       { name: 'Domoda yapp', composant: 'riz, viande', price: 16, image: '/images/domoda_yapp.jpg' },
       { name: 'Yassa guinaar', composant: 'riz, poulet', price: 16, image: '/images/yassa.jpg' },
       { name: 'Salade composée', composant: 'salade, viande, tomate', price: 13, image: '/images/salade.jpg' },
-      { name: 'Couscous guinaar', composant: 'couscous, poulet', price: 16, image: '/images/couscous-de-poulet-au-raisins.jpg' }
+      { name: 'Couscous guinaar', composant: 'couscous, poulet', price: 16, image: '/images/couscous-de-poulet-au-raisins.jpg' },
+      { name: 'Fataya', composant: 'fataya, poulet', price: 10, image: '/images/fataya.jpg' }
     ]
   },
   {
