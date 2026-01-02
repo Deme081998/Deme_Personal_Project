@@ -3,7 +3,7 @@
     <!-- TITRE -->
     <h1 class="title">
       {{ selectedCategory?.label === 'Jus'
-        ? '🥤 Choisissez votre Jus'
+        ? '🥤 Choisissez votre jus naturel'
         : `🍽️ Choisissez votre ${selectedCategory?.label?.toLowerCase() || 'catégorie'}`
       }}
     </h1>
@@ -142,7 +142,7 @@ const categories = [
   {
     name: 'plats',
     label: 'Plat',
-    image: '/images/categorie_plat.jpg',
+    image: '/images/categories_plat.jpg',
     items: [
       { name: 'Thiébou dieune', composant: 'riz, poisson, légumes', price: 16, image: '/images/tieboudiene.jpg' },
       { name: 'Thiébou diaga', composant: 'riz, poisson, légumes, boulette', price: 16, image: '/images/thiébou_diaga.jpg' },
@@ -150,7 +150,7 @@ const categories = [
       { name: 'Thiébou yapp', composant: 'riz, viande, œufs, légumes', price: 16, image: '/images/thiébou_yapp.jpg' },
       { name: 'Domoda yapp', composant: 'riz, viande', price: 16, image: '/images/domoda_yapp.jpg' },
       { name: 'Yassa guinaar', composant: 'riz, poulet', price: 16, image: '/images/yassa.jpg' },
-      { name: 'Salade composée', composant: 'salade, viande', price: 13, image: '/images/salade.jpg' },
+      { name: 'Salade composée', composant: 'salade, viande, tomate', price: 13, image: '/images/salade.jpg' },
       { name: 'Couscous guinaar', composant: 'couscous, poulet', price: 16, image: '/images/couscous-de-poulet-au-raisins.jpg' }
     ]
   },
@@ -170,19 +170,21 @@ const categories = [
     image: '/images/jus_naturel.jpg',
     items: [
       { name: 'Bissap', price: 6, image: '/images/jus_bissap.jpg' },
-      { name: 'Raisin', price: 6, image: '/images/raisin.jpg' },
-      { name: 'Fraise', price: 6, image: '/images/fraise.jpg' },
-      { name: 'Bouye', price: 6, image: '/images/bouye.jpg' },
-      { name: 'Mangue', price: 6, image: '/images/jus_de_mangue.jpg' },
+      { name: 'Raisin', price: 6, image: '/images/jus_raisin.jpg' },
+      { name: 'Fraise', price: 6, image: '/images/jus_fraise.jpg' },
+      { name: 'Bouye', price: 6, image: '/images/jus_bouye.jpg' },
+      { name: 'Mangue', price: 6, image: '/images/jus_mangue.jpg' },
       { name: 'Orange', price: 6, image: '/images/jus_orange.jpg' },
-      { name: 'Citron', price: 6, image: '/images/jus_de_citron.jpg' },
-      { name: 'Pomme', price: 6, image: '/images/jus_de_pomme.jpg' },
+      { name: 'Citron', price: 6, image: '/images/jus_citron.jpg' },
+      { name: 'Pomme', price: 6, image: '/images/jus_pomme.jpg' },
       { name: 'Ananas', price: 6, image: '/images/jus_ananas.jpg' },
       { name: 'Goyave', price: 6, image: '/images/jus_goyave.jpg'},
-      { name: 'Gingembre', price: 6, image: '/images/ginger.jpg'},
+      { name: 'Gingembre', price: 6, image: '/images/jus_ginger.jpg'},
       { name: 'Pastèque', price: 6, image: '/images/jus_pasteque.jpg'},
       { name: 'Melon', price: 6, image: '/images/jus_melon.jpg'},
-      { name: 'Poire', price: 6, image: '/images/jus_poire.jpg'}
+      { name: 'Poire', price: 6, image: '/images/jus_poire.jpg'},
+      { name: 'Kiwi', price: 6, image: '/images/jus_kiwi.jpg'},
+      { name: 'Banane', price: 6, image: '/images/jus_banane.jpg'}
     ]
   }
 ]
